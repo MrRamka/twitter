@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.validator.constraints.Length;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -75,6 +76,10 @@ public class Tweet {
      */
     @NotNull
     private LocalDateTime createdAt;
+
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Thread repliedTweet;
 
     @Override
     public boolean equals(Object o) {

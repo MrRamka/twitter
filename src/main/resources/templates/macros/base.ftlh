@@ -6,6 +6,9 @@
 <#macro style_block>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <meta name="_csrf" content="${_csrf.token}"/>
+    <!-- default header name is X-CSRF-TOKEN -->
+    <meta name="_csrf_header" content="${_csrf.headerName}"/>
 </#macro>
 
 <#macro page_body>
@@ -17,7 +20,7 @@
     <header>
 
         <div class="header_pos d-flex flex-column flex-md-row fixed-top align-items-center p-2 px-md-3 mb-2 bg-white border-bottom shadow-sm">
-            <a class="my-0 mr-md-auto navbar-brand text-dark" href="">Twitter</a>
+            <a class="my-0 mr-md-auto navbar-brand text-dark" href="/">Twitter</a>
             <nav class="my-2 my-md-0 mr-md-3">
                 <@security.authorize access="isAuthenticated()">
                     <a href="/tweet/create" class="btn mr-2 btn-outline-success">Create tweet</a>
@@ -31,9 +34,6 @@
                 </@security.authorize>
             </nav>
         </div>
-        <meta name="_csrf" content="${_csrf.token}"/>
-        <!-- default header name is X-CSRF-TOKEN -->
-        <meta name="_csrf_header" content="${_csrf.headerName}"/>
     </header>
 </#macro>
 

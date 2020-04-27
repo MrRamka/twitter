@@ -16,7 +16,7 @@ public class CreateTweetServiceImpl implements CreateTweetService {
     private TweetRepository tweetRepository;
 
     @Override
-    public void createTweet(CreateTweetDto createTweetDto, User author) {
+    public Tweet createTweet(CreateTweetDto createTweetDto, User author) {
         Tweet tweet = Tweet
                 .builder()
                 .author(author)
@@ -24,5 +24,6 @@ public class CreateTweetServiceImpl implements CreateTweetService {
                 .tweetText(createTweetDto.getTweetText())
                 .build();
         tweetRepository.save(tweet);
+        return tweet;
     }
 }
