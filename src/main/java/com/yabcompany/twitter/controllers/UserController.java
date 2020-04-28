@@ -52,7 +52,7 @@ public class UserController {
             // Get users Tweets
             List<Tweet> userTweets = tweetService.getUsersAllTweets(user.get());
             model.addAttribute("userTweets", userTweets);
-// TODO Check following
+            // TODO Check following
             // Date Time Formatter
             model.addAttribute("formatter", dateTimeFormatter);
 
@@ -72,6 +72,13 @@ public class UserController {
     public String followUser(Principal principal, Model model, @PathVariable("username") String targetUsername) {
         userService.addFollower(targetUsername, principal.getName());
         return "redirect:/users/" + targetUsername;
+    }
+
+    @PostMapping("/checkUsername")
+    @ResponseBody
+    public boolean checkUsername(@RequestParam("username") String username) {
+        Optional<User> u = userRepository.findUserByUsername(username);
+        return u.isPresent();
     }
 
 

@@ -68,5 +68,5 @@ public class SecurityController {
         return Collections.singletonMap("name", principal.getAttribute("name"));
     }
 
-
+    
 }

@@ -46,11 +46,12 @@
     </head>
     <body>
     <@header/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
     <div class="container" style="margin-top: 4em;">
         <@page_body/>
     </div>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     </body>
     </html>
 </#macro>

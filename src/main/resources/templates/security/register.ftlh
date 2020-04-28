@@ -21,6 +21,9 @@
                     <div class="text-danger">
                         <@spring.showErrors "<br>"/>
                     </div>
+                    <div class="text-danger username-error">
+                        Current user already exist
+                    </div>
                 </div>
                 <div class="form-group">
                     <label>Name:</label>
@@ -49,6 +52,48 @@
             </form>
         </#if>
     </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script>
+
+        $(document).ready(function () {
+            let token = $("meta[name='_csrf']").attr("content");
+            let header = $("meta[name='_csrf_header']").attr("content");
+            let usernameError = $('.username-error');
+            usernameError.hide();
+            $(document).ajaxSend(function (e, xhr, options) {
+                xhr.setRequestHeader(header, token);
+            });
+            const MIN_USERNAME_LENGTH = 4;
+            $("#username").blur(function () {
+                let value = $("#username").val();
+                let valueLen = value.length;
+                if (valueLen >= MIN_USERNAME_LENGTH) {
+                    $.ajax({
+                        url: "/users/checkUsername",
+                        type: "POST",
+                        dataType: 'json',
+                        data: {
+                            "username": value
+                        },
+                        success: function (data) {
+                            let usernameError = $('.username-error');
+                            if (data) {
+                                usernameError.show();
+                            } else {
+                                usernameError.hide();
+                            }
+                        }
+
+                    });
+
+                }
+
+            });
+        });
+
+
+    </script>
 </#macro>
 
 <@display_page/>
