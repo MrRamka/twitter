@@ -86,6 +86,19 @@
             <artifactId>freemarker-java8</artifactId>
             <version>1.1.5</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.googlecode.json-simple</groupId>
+            <artifactId>json-simple</artifactId>
+            <version>1.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-oauth2-client</artifactId>
+        </dependency>
+
+
     </dependencies>
 
     <build>

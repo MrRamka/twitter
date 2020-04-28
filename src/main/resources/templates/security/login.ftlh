@@ -20,6 +20,9 @@
             </div>
             <input class="btn btn-primary" type="submit" value="Submit">
         </form>
+        <p> With GitHub: <a href="/oauth2/authorization/github">click here</a></p>
+
+
     </div>
 </#macro>
 

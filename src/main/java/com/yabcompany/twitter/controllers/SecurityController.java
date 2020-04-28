@@ -1,17 +1,22 @@
 package com.yabcompany.twitter.controllers;
 
 import com.yabcompany.twitter.dto.SignUpDto;
+import com.yabcompany.twitter.oath.VkOauth;
 import com.yabcompany.twitter.services.SignUpService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.util.Collections;
+import java.util.Map;
 
 @Controller
 public class SecurityController {
@@ -19,19 +24,23 @@ public class SecurityController {
     @Autowired
     private SignUpService service;
 
+    @Autowired
+    private VkOauth vkOauth;
+
     @GetMapping("/login")
-    public String getLoginPage() {
+    public String getLoginPage(Model model) throws MalformedURLException {
+        model.addAttribute("vkLogin", vkOauth.getLoginUrl());
         return "security/login";
     }
 
     @GetMapping("/register")
-    private String getRegisterPage(Model map) {
+    public String getRegisterPage(Model map) {
         map.addAttribute("form", new SignUpDto());
         return "security/register";
     }
 
     @PostMapping("/register")
-    private String register(@Valid @ModelAttribute("form") SignUpDto form, BindingResult bindingResult, Model map) {
+    public String register(@Valid @ModelAttribute("form") SignUpDto form, BindingResult bindingResult, Model map) {
         if (!bindingResult.hasErrors()) {
             service.signUp(form);
             return "redirect:/register";
@@ -41,7 +50,23 @@ public class SecurityController {
         }
     }
 
+    @GetMapping("/vklogin")
+    public String enterWithVk(@RequestParam(value = "code", required = false) String code) throws IOException {
+        System.out.println(code);
+        if (code != null) {
+//            System.out.println(vkOauth.sendRequest(vkOauth.getAccessToken(code)));
+            return "redirect:" + vkOauth.getAccessToken(code).toString();
+        }
+        return "home";
 
+    }
+
+    @GetMapping("/user")
+    @ResponseBody
+    public Map<String, Object> user(@AuthenticationPrincipal OAuth2User principal) {
+        System.out.println(principal);
+        return Collections.singletonMap("name", principal.getAttribute("name"));
+    }
 
 
 }

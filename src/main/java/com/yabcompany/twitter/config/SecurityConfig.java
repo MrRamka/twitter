@@ -59,7 +59,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .and()
 //                .exceptionHandling().accessDeniedPage("/accessDenied")
                 .and()
-                .csrf();
+                .csrf()
+                .and()
+                .oauth2Login().loginPage("/login");
+        ;
     }
 
 }
