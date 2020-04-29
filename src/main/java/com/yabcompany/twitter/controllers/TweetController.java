@@ -11,6 +11,7 @@ import com.yabcompany.twitter.repositories.UserRepository;
 import com.yabcompany.twitter.services.CreateTweetService;
 import com.yabcompany.twitter.services.ThreadService;
 import com.yabcompany.twitter.services.TweetService;
+import com.yabcompany.twitter.util.NumberFactsApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -47,6 +48,9 @@ public class TweetController {
 
     @Autowired
     private ThreadRepository threadRepository;
+
+    @Autowired
+    private NumberFactsApi numberFactsApi;
 
     @GetMapping("/{id}")
     public String getTweetPage(@PathVariable("id") Tweet tweet, Model model) {
@@ -93,8 +97,16 @@ public class TweetController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/create")
-    private String getCreatePage(Model model) {
+    public String getCreatePage(Model model) {
         model.addAttribute("form", new TweetDto());
+
+        /*
+            Add random fact using API
+         */
+        String fact = numberFactsApi.getRandomFact();
+        model.addAttribute("randomFact", fact);
+
+
         return "tweets_block/create_tweet";
     }
 

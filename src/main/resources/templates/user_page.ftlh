@@ -35,7 +35,7 @@
 
     </div>
 <#-- Tweet block-->
-    <#list userTweets as tweet>
+    <#list userTweets?reverse as tweet>
         <div class="col-8 offset-2">
             <div class="shadow m-3 p-3 border border-warning rounded">
                 <a class="text-dark" href="/tweet/${tweet.id}">

@@ -12,6 +12,14 @@
         <#if form?? && noErrors??>
             <p>Tweet created</p>
         <#else>
+            <div class="shadow m-2 p-3 mb-4 border border-warning rounded">
+                <h2><span class="font-weight-light">Random number fact: </span></h2>
+                <hr/>
+                <h3 id="randomFact">${randomFact}</h3>
+
+                <button id="addFact" class="btn btn-outline-primary">Click to post</button>
+            </div>
+
             <form method="post" action="">
                 <div class="form-group">
                     <label>Tweet text:</label>
@@ -25,6 +33,20 @@
             </form>
         </#if>
     </div>
+    <script>
+        $(document).ready(function () {
+
+            $('#addFact').click(function () {
+
+
+                let fact = $('#randomFact').text();
+                $('#tweetText').val(fact);
+
+            });
+
+        });
+
+    </script>
 </#macro>
 
-<@display_page/>l
+<@display_page/>
