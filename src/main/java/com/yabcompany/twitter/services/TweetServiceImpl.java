@@ -28,7 +28,13 @@ public class TweetServiceImpl implements TweetService {
         return null;
     }
 
-
+    /**
+     * Add tweet from Dto and author
+     *
+     * @param tweetData
+     * @param author
+     * @return Tweet
+     */
     @Override
     public Tweet addTweet(TweetDto tweetData, User author) {
         Tweet tweet = Tweet
@@ -67,7 +73,15 @@ public class TweetServiceImpl implements TweetService {
         return tweets;
     }
 
-
+    /**
+     * Paginated user follows tweet query set
+     *
+     * @param user
+     * @param page
+     * @param size
+     * @param property
+     * @return
+     */
     @Override
     public List<Tweet> getUserFollowsTweets(User user, Integer page, Integer size, String property) {
         Set<User> follows = userService.getFollowsUsers(user);
@@ -81,13 +95,21 @@ public class TweetServiceImpl implements TweetService {
         return fullFollowsTweets;
     }
 
+    /**
+     * Get users paginated tweet set
+     *
+     * @param page
+     * @param size
+     * @param property
+     * @param user
+     * @return
+     */
     @Override
     public List<Tweet> getUserTweets(Integer page, Integer size, String property, User user) {
         Sort sort = Sort.by(property);
         PageRequest request = PageRequest.of(page, size, sort);
         Page<Tweet> pageResult = tweetRepository.findAllByAuthor(request, user);
         List<Tweet> tweets = pageResult.getContent();
-        System.out.println("Tweets" + tweets);
         return tweets;
     }
 }

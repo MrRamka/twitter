@@ -40,7 +40,7 @@ public class Tweet {
     /*
     The FetchType.EAGER tells Hibernate to get all elements of a relationship
      when selecting the root entity. As I explained earlier, this is the
-     default for to-one relationships, and you can see it in the
+     default.ftlh for to-one relationships, and you can see it in the
      following code snippets.
      */
 

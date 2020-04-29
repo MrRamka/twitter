@@ -2,6 +2,7 @@ package com.yabcompany.twitter.controllers;
 
 import com.yabcompany.twitter.dto.CreateTweetDto;
 import com.yabcompany.twitter.dto.TweetDto;
+import com.yabcompany.twitter.exception.NotFoundException;
 import com.yabcompany.twitter.models.Thread;
 import com.yabcompany.twitter.models.Tweet;
 import com.yabcompany.twitter.models.User;
@@ -13,19 +14,16 @@ import com.yabcompany.twitter.services.TweetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
-import java.util.Set;
 
 @Controller
 @RequestMapping("/tweet")
@@ -53,6 +51,10 @@ public class TweetController {
     @GetMapping("/{id}")
     public String getTweetPage(@PathVariable Long id, Model model) {
         Tweet tweet = tweetService.getTweet(id);
+        System.out.println(tweet);
+        if (tweet == null) {
+            throw new NotFoundException("tweet with id " + id);
+        }
         model.addAttribute("tweet", tweet);
         // Date Time Formatter
         model.addAttribute("formatter", dateTimeFormatter);
@@ -100,9 +102,13 @@ public class TweetController {
         return "tweets_block/create_tweet";
     }
 
-    @PostMapping("/addLike")
+    @PostMapping("/{id}/addLike")
     @ResponseBody
-    public String addLike(Principal principal) {
+    public String addLike(
+            @PathVariable("id") Long id,
+            Model map,
+            Principal principal
+    ) {
 
         return "";
     }

@@ -108,7 +108,6 @@ public class UserServiceImpl implements UserService {
         User source = getUserByUsername(sourceUserUsername);
         target.getFollowing().add(source);
         userRepository.save(target);
-
     }
 
 

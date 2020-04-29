@@ -51,13 +51,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll();*/
 
         http.authorizeRequests()
+                .antMatchers("/feed").authenticated()
                 .anyRequest().permitAll()
+                .and()
+                .exceptionHandling().accessDeniedPage("/accessDenied")
                 .and()
                 .formLogin().loginPage("/login").failureUrl("/login?error")
                 .and()
                 .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/")
-//                .and()
-//                .exceptionHandling().accessDeniedPage("/accessDenied")
                 .and()
                 .csrf()
                 .and()

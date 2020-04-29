@@ -6,6 +6,7 @@ import com.yabcompany.twitter.models.User;
 import com.yabcompany.twitter.repositories.UserRepository;
 import com.yabcompany.twitter.services.TweetService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -52,7 +53,7 @@ public class FeedController {
             model.addAttribute("formatter", formatter);
             return "tweets_block/feed";
         } else {
-            return "redirect:/login";
+            throw new AccessDeniedException("AccessDenied");
         }
 
     }

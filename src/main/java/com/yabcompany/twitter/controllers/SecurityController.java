@@ -64,9 +64,11 @@ public class SecurityController {
     @GetMapping("/user")
     @ResponseBody
     public Map<String, Object> user(@AuthenticationPrincipal OAuth2User principal) {
-        System.out.println(principal);
         return Collections.singletonMap("name", principal.getAttribute("name"));
     }
 
-    
+    @GetMapping("/accessDenied")
+    public String getError403Page(){
+        return "errors/403";
+    }
 }
