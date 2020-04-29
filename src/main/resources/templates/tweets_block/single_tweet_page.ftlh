@@ -40,17 +40,20 @@
         </div>
     </@security.authorize>
     <#if replies??>
-        <#list replies as reply>
-            <div class="shadow m-2 p-3 border border-warning rounded">
-                <a class="text-dark" href="/tweet/${reply.id}">
-                    <h3>${reply.tweetText}</h3>
-                </a>
-                <h4 class="font-weight-light">Posted on: ${reply.createdAt.format(formatter)}</h4>
-                <h4 class="font-weight-light">Likes: ${reply.likes?size}</h4>
-            </div>
+        <div>
+            <#list replies as reply>
+                <div class="col-9 offset-md-3 shadow m-2 p-3 border border-warning rounded">
+                    <h4><a href="/users/${reply.author.username}">${reply.author.username}</a></h4>
+                    <a class="text-dark" href="/tweet/${reply.id}">
+                        <h3>${reply.tweetText}</h3>
+                    </a>
+                    <h4 class="font-weight-light">Posted on: ${reply.createdAt.format(formatter)}</h4>
+                    <h4 class="font-weight-light">Likes: ${reply.likes?size}</h4>
+                </div>
 
 
-        </#list>
+            </#list>
+        </div>
     </#if>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 

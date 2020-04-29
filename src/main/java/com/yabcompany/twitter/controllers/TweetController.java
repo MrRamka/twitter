@@ -49,12 +49,8 @@ public class TweetController {
     private ThreadRepository threadRepository;
 
     @GetMapping("/{id}")
-    public String getTweetPage(@PathVariable Long id, Model model) {
-        Tweet tweet = tweetService.getTweet(id);
-        System.out.println(tweet);
-        if (tweet == null) {
-            throw new NotFoundException("tweet with id " + id);
-        }
+    public String getTweetPage(@PathVariable("id") Tweet tweet, Model model) {
+//        Tweet tweet = tweetService.getTweet(id);
         model.addAttribute("tweet", tweet);
         // Date Time Formatter
         model.addAttribute("formatter", dateTimeFormatter);
@@ -105,7 +101,7 @@ public class TweetController {
     @PostMapping("/{id}/addLike")
     @ResponseBody
     public String addLike(
-            @PathVariable("id") Long id,
+            @PathVariable("id") Tweet tweet,
             Model map,
             Principal principal
     ) {
@@ -115,7 +111,7 @@ public class TweetController {
 
     @PostMapping("/{id}/reply")
     public String replyTweet(Principal principal,
-                             @PathVariable("id") Long id,
+                             @PathVariable("id") Tweet mainTweet,
                              Model map,
                              @Valid @ModelAttribute("form") CreateTweetDto createTweetDto,
                              BindingResult bindingResult
@@ -126,17 +122,17 @@ public class TweetController {
 
             if (user.isPresent()) {
                 Tweet tweet = createTweetService.createTweet(createTweetDto, user.get());
-                Thread thread = threadService.getThreadById(id);
+                Thread thread = threadService.getThreadById(mainTweet.getId());
                 threadService.replyTweet(thread, tweet);
                 threadService.createThead(tweet);
 
             } else {
                 return "redirect:/login";
             }
-            return "redirect:" + MvcUriComponentsBuilder.fromMappingName("TC#getTweetPage").arg(0, id).build();
+            return "redirect:" + MvcUriComponentsBuilder.fromMappingName("TC#getTweetPage").arg(0, mainTweet).build();
         } else {
             map.addAttribute("form", createTweetDto);
-            return MvcUriComponentsBuilder.fromMappingName("TC#getTweetPage").arg(0, id).build();
+            return MvcUriComponentsBuilder.fromMappingName("TC#getTweetPage").arg(0, mainTweet).build();
         }
 
     }

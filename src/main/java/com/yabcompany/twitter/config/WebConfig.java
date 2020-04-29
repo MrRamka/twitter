@@ -1,5 +1,7 @@
 package com.yabcompany.twitter.config;
 
+import com.yabcompany.twitter.models.Tweet;
+import com.yabcompany.twitter.util.StringToEntityConverter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -25,12 +27,17 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Bean
     @ConditionalOnMissingBean(ClassPathTldsLoader.class)
-    public ClassPathTldsLoader classPathTldsLoader(){
+    public ClassPathTldsLoader classPathTldsLoader() {
         return new ClassPathTldsLoader();
     }
 
     @Bean
-    public DateTimeFormatter getDateFormatter(){
+    public DateTimeFormatter getDateFormatter() {
         return DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    }
+
+    @Bean
+    public StringToEntityConverter bookGenericConverter() {
+        return new StringToEntityConverter(Tweet.class);
     }
 }
