@@ -53,8 +53,12 @@ public class TweetController {
     private NumberFactsApi numberFactsApi;
 
     @GetMapping("/{id}")
-    public String getTweetPage(@PathVariable("id") Tweet tweet, Model model) {
-//        Tweet tweet = tweetService.getTweet(id);
+    public String getTweetPage(@PathVariable("id") Tweet tweet, Model model, Principal principal) {
+
+        if (principal != null) {
+            model.addAttribute("currentUser", userRepository.findUserByUsername(principal.getName()).get());
+        }
+
         model.addAttribute("tweet", tweet);
         // Date Time Formatter
         model.addAttribute("formatter", dateTimeFormatter);
@@ -86,9 +90,10 @@ public class TweetController {
                 Tweet tweet = createTweetService.createTweet(createTweetDto, user.get());
                 threadService.createThead(tweet);
             } else {
-                return "redirect:/login";
+                return "redirect:" + MvcUriComponentsBuilder.fromMappingName("SC#getLoginPage").build();
             }
-            return "redirect:/users/" + principal.getName();
+            return "redirect:" +
+                    MvcUriComponentsBuilder.fromMappingName("UC#getUserPage").arg(0, principal.getName()).build();
         } else {
             map.addAttribute("form", createTweetDto);
             return "tweets_block/create_tweet";
@@ -149,5 +154,53 @@ public class TweetController {
 
     }
 
+    @PostMapping("{id}/delete")
+    public String deleteTweet(Principal principal,
+                              @PathVariable("id") Tweet mainTweet,
+                              Model map) {
+        Optional<User> user = userRepository.findUserByUsername(principal.getName());
 
+        if (user.isPresent() && mainTweet.getAuthor().equals(user.get())) {
+            tweetService.deleteTweet(mainTweet);
+        }
+        return "redirect:" +
+                MvcUriComponentsBuilder.fromMappingName("UC#getUserPage").arg(0, principal.getName()).build();
+    }
+
+    @GetMapping("{id}/update")
+    public String updateTweetPage(Principal principal,
+                              @PathVariable("id") Tweet mainTweet,
+                              Model model) {
+        Optional<User> user = userRepository.findUserByUsername(principal.getName());
+
+        if (user.isPresent() && mainTweet.getAuthor().equals(user.get())) {
+            model.addAttribute("form", TweetDto.builder().tweetText(mainTweet.getTweetText()).build());
+        }
+        return "tweets_block/update_tweet";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("{id}/update")
+    public String updateTweet(Principal principal,
+                              Model map,
+                              @PathVariable("id") Tweet mainTweet,
+                              @Valid @ModelAttribute("form") CreateTweetDto createTweetDto,
+                              BindingResult bindingResult
+    ) {
+        if (!bindingResult.hasErrors()) {
+
+            Optional<User> user = userRepository.findUserByUsername(principal.getName());
+
+            if (user.isPresent()) {
+                Tweet tweet = createTweetService.updateTweet(createTweetDto, mainTweet);
+            } else {
+                return "redirect:" + MvcUriComponentsBuilder.fromMappingName("SC#getLoginPage").build();
+            }
+            return "redirect:" +
+                    MvcUriComponentsBuilder.fromMappingName("UC#getUserPage").arg(0, principal.getName()).build();
+        } else {
+            map.addAttribute("form", createTweetDto);
+            return "tweets_block/update_tweet";
+        }
+    }
 }

@@ -1,6 +1,6 @@
 package com.yabcompany.twitter.aspects;
 
-import com.yabcompany.twitter.exception.NotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +21,8 @@ import javax.servlet.http.HttpServletRequest;
  * @see UsernameNotFoundException
  */
 @ControllerAdvice
-class ExceptionHandlerController {
+@Slf4j
+public class ExceptionHandlerController {
     /**
      * Handle ConstraintViolationException
      *
@@ -30,6 +31,7 @@ class ExceptionHandlerController {
      */
     @ExceptionHandler(value = ConstraintViolationException.class)
     public ResponseEntity<Object> exception(ConstraintViolationException exception) {
+        log.error(exception.getMessage());
         return new ResponseEntity<>(exception.getCause().getMessage(), HttpStatus.CONFLICT);
     }
 
@@ -47,6 +49,7 @@ class ExceptionHandlerController {
         model.addObject("exception", exception.getMessage());
         model.addObject("url", request.getRequestURI());
         model.setViewName("errors/404");
+        log.error(exception.getMessage());
         return model;
     }
 
@@ -64,17 +67,19 @@ class ExceptionHandlerController {
         model.addObject("exception", exception.getMessage());
         model.addObject("url", request.getRequestURI());
         model.setViewName("errors/404");
+        log.error(exception.getMessage());
         return model;
     }
 
 
-    //@ExceptionHandler(Throwable.class)
+    @ExceptionHandler(Throwable.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ModelAndView notFound2(HttpServletRequest req, Exception exception) {
         ModelAndView mav = new ModelAndView();
         mav.addObject("exception", exception);
         mav.addObject("url", req.getRequestURL());
         mav.setViewName("errors/default");
+        log.error(exception.getMessage());
         return mav;
     }
 }

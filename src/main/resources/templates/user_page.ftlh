@@ -9,8 +9,13 @@
         <div class="row">
             <div class="col-8">
                 <h1>${user.username}</h1>
-                <h3 class="font-weight-light pb-3">${user.name} ${user.surname}</h3>
-
+                <h2 class="font-weight-light">${user.name} ${user.surname}</h2>
+                <#if user.place??>
+                    <h3 class="font-weight-light">${user.place.country}, ${user.place.city}</h3>
+                </#if>
+                <#if user.bio??>
+                    <h3 class="font-weight-light pb-2">${user.bio}</h3>
+                </#if>
                 <h4>
                     Joined ${user.createdAt.format(formatter)}</h4>
 

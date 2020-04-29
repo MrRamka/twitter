@@ -13,6 +13,24 @@
         <h3>${tweet.tweetText}</h3>
         <h4 class="font-weight-light">Posted on: ${tweet.createdAt.format(formatter)}</h4>
         <h4 class="font-weight-light">Likes: ${tweet.likes?size}</h4>
+
+
+        <@security.authorize access="isAuthenticated()">
+            <#if currentUser.username == tweet.author.username >
+                <a href="/tweet/${tweet.id}/update" class="btn btn-outline-warning">Update</a>
+
+                <form class="my-2" method="post" action="/tweet/${tweet.id}/delete">
+                    <div class="row">
+                        <input class="form-control" type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
+                        <div class="col-md-2">
+                            <button class="btn btn-outline-danger">Delete</button>
+                        </div>
+                    </div>
+                </form>
+            </#if>
+        </@security.authorize>
+
+
     </div>
     <@security.authorize access="isAuthenticated()">
         <div class="shadow m-2 p-3">
@@ -20,9 +38,6 @@
             <form class="my-2" method="post" action="/tweet/${tweet.id}/reply">
                 <div class="row">
                     <div class="col">
-                        <#--                        <input id="${tweet.id}" name="add_comment_input" type="text"-->
-                        <#--                               class="form-control feed_comment_block"-->
-                        <#--                               placeholder="Add a comment">-->
                         <@spring.formInput "form.tweetText" "id='${tweet.id}' name='add_comment_input' type='text'
                                class='form-control feed_comment_block'
                                placeholder='Add a comment'"/>

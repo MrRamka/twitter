@@ -10,11 +10,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.Map;
 
@@ -40,10 +40,14 @@ public class SecurityController {
     }
 
     @PostMapping("/register")
-    public String register(@Valid @ModelAttribute("form") SignUpDto form, BindingResult bindingResult, Model map) {
+    public String register(
+            @Valid @ModelAttribute("form") SignUpDto form,
+            BindingResult bindingResult,
+            Model map
+    ) {
         if (!bindingResult.hasErrors()) {
             service.signUp(form);
-            return "redirect:/register";
+            return "redirect:" +  MvcUriComponentsBuilder.fromMappingName("SC#getRegisterPage").build();
         } else {
             map.addAttribute("form", form);
             return "security/register";
@@ -68,7 +72,7 @@ public class SecurityController {
     }
 
     @GetMapping("/accessDenied")
-    public String getError403Page(){
+    public String getError403Page() {
         return "errors/403";
     }
 }

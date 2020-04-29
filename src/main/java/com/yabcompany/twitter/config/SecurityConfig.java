@@ -63,7 +63,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf()
                 .and()
                 .oauth2Login().loginPage("/login");
-        ;
+
     }
 
 }

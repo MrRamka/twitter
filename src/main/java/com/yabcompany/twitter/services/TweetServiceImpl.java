@@ -112,4 +112,10 @@ public class TweetServiceImpl implements TweetService {
         List<Tweet> tweets = pageResult.getContent();
         return tweets;
     }
+
+    @Override
+    public void deleteTweet(Tweet tweet) {
+
+        tweetRepository.delete(tweet);
+    }
 }

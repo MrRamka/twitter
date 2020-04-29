@@ -46,7 +46,6 @@ public class UserController {
         }
 
         if (user.isPresent()) {
-            UserDto userDto = UserDto.from(user.get());
             model.addAttribute("user", user.get());
 
             // Get users Tweets
@@ -56,9 +55,6 @@ public class UserController {
             // Date Time Formatter
             model.addAttribute("formatter", dateTimeFormatter);
 
-            // Followers Amount
-            int followerAmount = 0;
-            model.addAttribute("followerAmount", followerAmount);
         } else {
             throw new UsernameNotFoundException("Cant find user");
         }

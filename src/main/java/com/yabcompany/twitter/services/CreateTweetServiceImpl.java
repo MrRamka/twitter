@@ -26,4 +26,11 @@ public class CreateTweetServiceImpl implements CreateTweetService {
         tweetRepository.save(tweet);
         return tweet;
     }
+
+    @Override
+    public Tweet updateTweet(CreateTweetDto createTweetDto, Tweet tweet) {
+        tweet.setTweetText(createTweetDto.getTweetText());
+        tweetRepository.save(tweet);
+        return tweet;
+    }
 }

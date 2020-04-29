@@ -78,7 +78,7 @@ public class Tweet {
     private LocalDateTime createdAt;
 
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Thread repliedTweet;
 
     @Override

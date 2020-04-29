@@ -103,6 +103,8 @@ public class User {
     )
     private Set<User> following = new HashSet<User>();
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Place place;
 
     @Override
     public boolean equals(Object o) {

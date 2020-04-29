@@ -20,5 +20,7 @@ public interface TweetService {
 
     List<Tweet> getUserTweets(Integer page, Integer size, String sort, User user);
 
+    void deleteTweet(Tweet tweetId);
+
 
 }

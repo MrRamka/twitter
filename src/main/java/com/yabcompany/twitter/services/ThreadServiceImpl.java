@@ -36,10 +36,8 @@ public class ThreadServiceImpl implements ThreadService {
 
     @Override
     public Thread replyTweet(Thread thread, Tweet replyingTweet) {
-        System.out.println(thread.getRepliedTweets());
         if (thread.getRepliedTweets() != null) {
             thread.getRepliedTweets().add(replyingTweet);
-            System.out.println(thread.getRepliedTweets());
             replyingTweet.setRepliedTweet(thread);
             tweetRepository.save(replyingTweet);
         }
