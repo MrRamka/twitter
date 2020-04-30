@@ -67,7 +67,12 @@ public class Tweet {
      for your uses case. You can see an example of a lazily fetched relationship
      in the following code snippets.
      */
-    @OneToMany(mappedBy = "liked_tweets", fetch = FetchType.LAZY)
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinTable(
+            name = "users_tweet_like",
+            joinColumns = {@JoinColumn(name = "tweet_id")},
+            inverseJoinColumns = {@JoinColumn(name = "user_id")}
+    )
     private Set<User> likes = new HashSet<>();
 
 

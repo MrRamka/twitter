@@ -58,7 +58,6 @@ public class SecurityController {
     public String enterWithVk(@RequestParam(value = "code", required = false) String code) throws IOException {
         System.out.println(code);
         if (code != null) {
-//            System.out.println(vkOauth.sendRequest(vkOauth.getAccessToken(code)));
             return "redirect:" + vkOauth.getAccessToken(code).toString();
         }
         return "home";

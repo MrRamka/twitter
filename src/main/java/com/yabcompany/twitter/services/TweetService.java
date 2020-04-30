@@ -22,5 +22,7 @@ public interface TweetService {
 
     void deleteTweet(Tweet tweetId);
 
+    Tweet addLike(Tweet tweet, User user);
 
+    Tweet removeLike(Tweet tweet, User user);
 }

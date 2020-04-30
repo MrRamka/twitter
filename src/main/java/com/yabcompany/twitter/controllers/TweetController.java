@@ -56,7 +56,15 @@ public class TweetController {
     public String getTweetPage(@PathVariable("id") Tweet tweet, Model model, Principal principal) {
 
         if (principal != null) {
-            model.addAttribute("currentUser", userRepository.findUserByUsername(principal.getName()).get());
+            User user = userRepository.findUserByUsername(principal.getName()).get();
+            model.addAttribute("currentUser", user);
+
+            if (tweet.getLikes().contains(user)) {
+                model.addAttribute("liked", true);
+            } else {
+                model.addAttribute("liked", false);
+            }
+
         }
 
         model.addAttribute("tweet", tweet);
@@ -115,15 +123,35 @@ public class TweetController {
         return "tweets_block/create_tweet";
     }
 
-    @PostMapping("/{id}/addLike")
-    @ResponseBody
+
+    @PostMapping("/{id}/like")
     public String addLike(
             @PathVariable("id") Tweet tweet,
             Model map,
             Principal principal
     ) {
+        Optional<User> user = userRepository.findUserByUsername(principal.getName());
 
-        return "";
+        if (user.isPresent()) {
+            tweetService.addLike(tweet, user.get());
+        } else {
+            return "redirect:" + MvcUriComponentsBuilder.fromMappingName("SC#getLoginPage").build();
+        }
+        return "redirect:" + MvcUriComponentsBuilder.fromMappingName("TC#getTweetPage").arg(0, tweet).build();
+    }
+    @PostMapping("/{id}/remove-like")
+    public String removeLike(
+            @PathVariable("id") Tweet tweet,
+            Principal principal
+    ) {
+        Optional<User> user = userRepository.findUserByUsername(principal.getName());
+
+        if (user.isPresent()) {
+            tweetService.removeLike(tweet, user.get());
+        } else {
+            return "redirect:" + MvcUriComponentsBuilder.fromMappingName("SC#getLoginPage").build();
+        }
+        return "redirect:" + MvcUriComponentsBuilder.fromMappingName("TC#getTweetPage").arg(0, tweet).build();
     }
 
     @PostMapping("/{id}/reply")
@@ -144,7 +172,7 @@ public class TweetController {
                 threadService.createThead(tweet);
 
             } else {
-                return "redirect:/login";
+                return "redirect:" + MvcUriComponentsBuilder.fromMappingName("SC#getLoginPage").build();
             }
             return "redirect:" + MvcUriComponentsBuilder.fromMappingName("TC#getTweetPage").arg(0, mainTweet).build();
         } else {
@@ -169,8 +197,8 @@ public class TweetController {
 
     @GetMapping("{id}/update")
     public String updateTweetPage(Principal principal,
-                              @PathVariable("id") Tweet mainTweet,
-                              Model model) {
+                                  @PathVariable("id") Tweet mainTweet,
+                                  Model model) {
         Optional<User> user = userRepository.findUserByUsername(principal.getName());
 
         if (user.isPresent() && mainTweet.getAuthor().equals(user.get())) {

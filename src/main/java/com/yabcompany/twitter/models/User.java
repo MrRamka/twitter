@@ -10,6 +10,7 @@ import org.hibernate.validator.constraints.Length;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.HashSet;
@@ -82,19 +83,15 @@ public class User {
     @NotNull
     private LocalDateTime createdAt;
 
-    /**
-     * Liked tweets
-     */
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "tweets")
-    private Tweet liked_tweets;
-
-    /**
+       /**
      * User own tweets
      */
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, targetEntity = Tweet.class)
     private Set<Tweet> tweets = new HashSet<>();
 
+    /**
+     * Following many to many field
+     */
     @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinTable(
             name = "users_follows",

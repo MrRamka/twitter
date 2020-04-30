@@ -28,6 +28,27 @@
                     </div>
                 </form>
             </#if>
+            <#if liked>
+                <form class="my-2" method="post" action="/tweet/${tweet.id}/remove-like">
+                    <div class="row">
+                        <input class="form-control" type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
+                        <div class="col-md-2">
+                            <button class="btn btn-outline-danger">Remove Like</button>
+                        </div>
+                    </div>
+                </form>
+            <#else>
+                <form class="my-2" method="post" action="/tweet/${tweet.id}/like">
+                    <div class="row">
+                        <input class="form-control" type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
+                        <div class="col-md-2">
+                            <button class="btn btn-outline-success">Like</button>
+                        </div>
+                    </div>
+                </form>
+            </#if>
+
+
         </@security.authorize>
 
 

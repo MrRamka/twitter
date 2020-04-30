@@ -86,7 +86,6 @@ public class TweetServiceImpl implements TweetService {
     public List<Tweet> getUserFollowsTweets(User user, Integer page, Integer size, String property) {
         Set<User> follows = userService.getFollowsUsers(user);
         List<Tweet> fullFollowsTweets = new ArrayList<>();
-        System.out.println(follows);
         for (User user_iter : follows) {
             fullFollowsTweets.addAll(
                     getUserTweets(page, size, property, user_iter)
@@ -113,9 +112,42 @@ public class TweetServiceImpl implements TweetService {
         return tweets;
     }
 
+    /**
+     * Delete tweet from DataBase
+     *
+     * @param tweet
+     */
     @Override
     public void deleteTweet(Tweet tweet) {
 
         tweetRepository.delete(tweet);
+    }
+
+    /**
+     * Add like to tweet
+     *
+     * @param tweet
+     * @param user
+     * @return
+     */
+    @Override
+    public Tweet addLike(Tweet tweet, User user) {
+        tweet.getLikes().add(user);
+        tweetRepository.save(tweet);
+        return tweet;
+    }
+
+    /**
+     * Remove like to tweet
+     *
+     * @param tweet
+     * @param user
+     * @return
+     */
+    @Override
+    public Tweet removeLike(Tweet tweet, User user) {
+        tweet.getLikes().remove(user);
+        tweetRepository.save(tweet);
+        return tweet;
     }
 }
